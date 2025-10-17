@@ -1,4 +1,4 @@
-const API_URL_BOOKS = "http://localhost:3000/api/books";
+const API_URL_BOOKS = "https://projectcrud-viktoriia2.onrender.com/api/books";
 
 const booksList = document.getElementById("books_list");
 const modal = document.getElementById("book_modal");
@@ -183,7 +183,7 @@ renderBooks();
 
 // readers section
 
-const API_URL_READERS = "http://localhost:3000/api/readers";
+const API_URL_READERS = "https://projectcrud-viktoriia2.onrender.com/api/readers";
 
 const readersList = document.getElementById("readers_list");
 const readerModal = document.getElementById("reader_modal");

@@ -1,7 +1,10 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const urlDB = `mysql://root:DSlZkNXyomXbbXvvEsasPcZGaJkIepxO@mysql.railway.internal:3306/railway`;
-const db = mysql.createPool(urlDB);
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL env variable is missing");
+}
+
+const db = mysql.createPool(process.env.DATABASE_URL);
 
 module.exports = db;

@@ -51,6 +51,17 @@
                         Books
                     </b>
                 </button>
+                <button id="button_authors"><b>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-person" viewBox="0 0 16 16">
+                        <path d="M12 1a1 1 0 0 1 1 1v10.755S12 11 8 11s-5 1.755-5 1.755V2a1 1 0 0 1 1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+                        <path d="M8 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                    </svg> Authors
+                </b></button>
+                <button id="button_borrowings"><b>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookshelf" viewBox="0 0 16 16">
+                    <path d="M2.5 0a.5.5 0 0 1 .5.5V2h10V.5a.5.5 0 0 1 1 0v15a.5.5 0 0 1-1 0V15H3v.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 .5-.5M3 14h10v-3H3zm0-4h10V7H3zm0-4h10V3H3z"/>
+                    </svg>Borrowings
+                </b></button>
             </div>
             <section id="readers_section">
                 <div id="header_readers_section">
@@ -84,6 +95,26 @@
                     
                 </div>
                 <div id="books_list"></div>
+            </section>
+            <section id="authors_section" class="hidden">
+                <div id="authors_header_section">
+                    <div class="text_block">
+                        <h2 style="font-size: large;">Authors list</h2>
+                        <p style="font-size: 14px;">Manage authors</p>
+                    </div>
+                    <button class="add_btn" id="add_authors_btn">Add author</button>
+                </div>
+                <div id="authors_list"></div>
+            </section>
+            <section id="borrowings_section" class="hidden">
+                <div id="borrowings_header_section">
+                    <div class="text_block">
+                        <h2 style="font-size: large;">Borrowings list</h2>
+                        <p style="font-size: 14px;">Manage book borrowings</p>
+                    </div>
+                    <button class="add_btn" id="add_borrowings_btn">Add borrowing</button>
+                </div>
+                <div id="borrowings_list"></div>
             </section>
         </section>
     </main>
@@ -135,6 +166,57 @@
         </div>
     </div>
 
+    <div class="modal" id="author_modal">
+        <div class="modal_content">
+            <h3>Add new Author</h3>
+            <form id="author_form">
+                <label for="author_name">Name</label>
+                <input type="text" id="author_name" required>
+
+                <label for="author_country">Country</label>
+                <input type="text" id="author_country">
+
+                <label for="author_birth_year">Birth Year</label>
+                <input type="number" id="author_birth_year">
+
+                <label for="author_bio">Biography</label>
+                <textarea id="author_bio" rows="4"></textarea>
+
+                <div id="form_btn">
+                    <button type="button" id="cancel_author_btn">Cancel</button>
+                    <button type="submit" class="primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="borrowing_modal">
+        <div class="modal_content">
+            <h3>Add new Borrowing</h3>
+            <form id="borrowing_form">
+                <label for="borrowing_reader">Reader</label>
+                <select id="borrowing_reader" required>
+                    <option value="">Select reader</option>
+                </select>
+
+                <label for="borrowing_book">Book</label>
+                <select id="borrowing_book" required>
+                    <option value="">Select book</option>
+                </select>
+
+                <label for="borrow_date">Borrow Date</label>
+                <input type="date" id="borrow_date" required>
+
+                <label for="return_date">Return Date</label>
+                <input type="date" id="return_date">
+
+                <div id="form_btn">
+                    <button type="button" id="cancel_borrowing_btn">Cancel</button>
+                    <button type="submit" class="primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

@@ -10,6 +10,16 @@ router.get('/', async (req, res, next)=>{
     }catch (err) {next(err);}
 });
 
+router.get('/:id', async (req, res, next)=>{
+    try{
+        const id = parseInt(req.params.id, 10);
+        const [rows] = await db.query('SELECT * FROM readers WHERE id = ?', [id]);
+        if(rows.length === 0) return res.status(404).json({error: "Reader not found"});
+        res.json(rows[0]);
+
+    }catch (err) {next(err);}
+});
+
 router.post('/', async (req, res, next)=>{
     try{
         const{name, email, phone, date_of_birth} = req.body;

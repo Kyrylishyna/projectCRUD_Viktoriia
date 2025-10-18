@@ -209,6 +209,10 @@ const cancelReaderBtn = document.getElementById("cancel_reader_btn");
 const readerForm = document.getElementById("reader_form");
 const readersCountEl = document.getElementById("readers_count");
 
+
+
+
+
 let editingReaderId = null;
 
 
@@ -220,6 +224,9 @@ async function renderReaders() {
   readersCountEl.textContent = readers.length;
 
   readers.forEach((reader) => {
+
+    const formattedDate = new Date(reader.date_of_birth).toLocaleDateString("en-GB");
+
     const div = document.createElement("div");
     div.className = "reader_card";
     div.dataset.id = reader.id;
@@ -280,7 +287,7 @@ async function renderReaders() {
       </svg> ${reader.phone}</p>
       <p class="card_body"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16" style="padding-right: 7px;">
       <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-      </svg> ${reader.date_of_birth}</p>
+      </svg> ${formattedDate}</p>
     `;
     readersList.appendChild(div);
   });

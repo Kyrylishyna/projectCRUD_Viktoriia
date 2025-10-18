@@ -9,7 +9,7 @@ const readersBtn = document.getElementById("button_readers");
 const booksBtn = document.getElementById("button_books");
 const readerSection = document.getElementById("readers_section");
 const booksSection = document.getElementById("books_section");
-
+const booksCountEl = document.getElementById("books_count");
 
 let editingBookId = null;
 
@@ -18,6 +18,8 @@ async function renderBooks() {
   booksList.innerHTML = "";
   const res = await fetch(API_URL_BOOKS);
   const books = await res.json();
+
+  booksCountEl.textContent = books.length;
 
   books.forEach((book) => {
     const div = document.createElement("div");
@@ -205,6 +207,7 @@ const readerModal = document.getElementById("reader_modal");
 const addReaderBtn = document.getElementById("add_readers_btn");
 const cancelReaderBtn = document.getElementById("cancel_reader_btn");
 const readerForm = document.getElementById("reader_form");
+const readersCountEl = document.getElementById("readers_count");
 
 let editingReaderId = null;
 
@@ -213,6 +216,8 @@ async function renderReaders() {
   readersList.innerHTML = "";
   const res = await fetch(API_URL_READERS);
   const readers = await res.json();
+
+  readersCountEl.textContent = readers.length;
 
   readers.forEach((reader) => {
     const div = document.createElement("div");

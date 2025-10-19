@@ -1,5 +1,11 @@
 const API_URL_BOOKS = "https://projectcrud-viktoriia2.onrender.com/api/books";
 
+
+const borrowingsBtn = document.getElementById("button_borrowings");
+const readersSection = document.getElementById("readers_section");
+const borrowingsSection = document.getElementById("borrowings_section");
+
+
 const booksList = document.getElementById("books_list");
 const modal = document.getElementById("book_modal");
 const addBookBtn = document.getElementById("add_books_btn");
@@ -179,19 +185,17 @@ modal.addEventListener("click", (e) => {
   }
 });
 
-//switch sections
-readersBtn.addEventListener("click", () => {
-  readerSection.classList.remove("hidden");
-  booksSection.classList.add("hidden");
-  readersBtn.classList.add("active");
-  booksBtn.classList.remove("active");
-});
-
+//NEW switch sections
 booksBtn.addEventListener("click", () => {
-  readerSection.classList.add("hidden");
   booksSection.classList.remove("hidden");
-  readersBtn.classList.remove("active");
+  readersSection.classList.add("hidden");
+  authorsSection.classList.add("hidden");
+  borrowingsSection.classList.add("hidden");
+
   booksBtn.classList.add("active");
+  readersBtn.classList.remove("active");
+  authorsBtn.classList.remove("active");
+  borrowingsBtn.classList.remove("active");
 });
 
 renderBooks();
@@ -384,5 +388,468 @@ readerModal.addEventListener("click", (e) => {
   }
 });
 
+readersBtn.addEventListener("click", () => {
+  readersSection.classList.remove("hidden");
+  booksSection.classList.add("hidden");
+  authorsSection.classList.add("hidden");
+  borrowingsSection.classList.add("hidden");
+
+  readersBtn.classList.add("active");
+  booksBtn.classList.remove("active");
+  authorsBtn.classList.remove("active");
+  borrowingsBtn.classList.remove("active");
+});
 renderReaders();
+
+//author section 
+const API_URL_AUTHORS = "https://projectcrud-viktoriia2.onrender.com/api/authors";
+
+const authorsList = document.getElementById("authors_list");
+const authorModal = document.getElementById("author_modal");
+const addAuthorBtn = document.getElementById("add_authors_btn");
+const cancelAuthorBtn = document.getElementById("cancel_author_btn");
+const authorForm = document.getElementById("author_form");
+const authorsBtn = document.getElementById("button_authors");
+const authorsSection = document.getElementById("authors_section");
+
+let editingAuthorId = null;
+
+// render authors
+async function renderAuthors() {
+  
+    authorsList.innerHTML = "";
+    const res = await fetch(API_URL_AUTHORS);
+    if (!res.ok) {
+      throw new Error("Failed to fetch authors: " + res.statusText);
+    }
+    const authors = await res.json();
+
+    authors.forEach((author) => {
+    const div = document.createElement("div");
+    div.className = "book_card"; // używamy tych samych stylów co book_card
+    div.dataset.id = author.id;
+    div.innerHTML = `
+    <div class="card_header">
+      <div>
+        <h3>${author.name}</h3>
+      </div>
+        <div class="actions_btn">
+          <button class="edit_btn" title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 
+              0 0 1 .707 0l1.293 1.293zm-1.75 
+              2.456-2-2L4.939 9.21a.5.5 0 0 
+              0-.121.196l-.805 2.414a.25.25 0 0 
+              0 .316.316l2.414-.805a.5.5 0 0 
+              0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" 
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 
+              15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 
+              0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 
+              0 0 1-.5-.5v-11a.5.5 0 0 
+              1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
+              1.5 0 0 0 1 2.5z"/>
+            </svg>
+          </button>
+          <button class="delete_btn" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 
+              6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 
+              1 .5-.5m2.5 0a.5.5 0 0 1 
+              .5.5v6a.5.5 0 0 1-1 
+              0V6a.5.5 0 0 1 .5-.5m3 
+              .5a.5.5 0 0 0-1 
+              0v6a.5.5 0 0 0 1 0z"/>
+              <path d="M14.5 3a1 1 0 0 
+              1-1 1H13v9a2 2 0 0 1-2 
+              2H5a2 2 0 0 1-2-2V4h-.5a1 
+              1 0 0 1-1-1V2a1 1 0 0 
+              1 1-1H6a1 1 0 0 1 1-1h2a1 
+              1 0 0 1 1 1h3.5a1 1 0 0 
+              1 1 1zM4.118 4 4 
+              4.059V13a1 1 0 0 0 1 
+              1h6a1 1 0 0 0 1-1V4.059L11.882 
+              4zM2.5 3h11V2h-11z"/>
+            </svg>
+          </button>
+        </div>
+        
+    </div>
+    <p class="card_body">
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe-americas" viewBox="0 0 16 16" style="padding-right: 7px;">
+        <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/>
+        </svg> ${author.country || "-"}</p>
+      <p class="card_body">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-date" viewBox="0 0 16 16" style="padding-right: 9px;">
+      <path d="M6.445 11.688V6.354h-.633A13 13 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23"/>
+      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+      </svg>${author.birth_year || "-"}</p>
+      <p class="card_body"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-richtext" viewBox="0 0 16 16" style="padding-right: 7px;">
+        <path d="M7 4.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m-.861 1.542 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V7.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V7s1.54-1.274 1.639-1.208M5 9a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1z"/>
+         <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1"/>
+          </svg> ${author.bio || "-"}</p>
+    `;
+    authorsList.appendChild(div);
+    });
+
+}
+
+// open modal
+addAuthorBtn.addEventListener("click", () => {
+  editingAuthorId = null;
+  authorForm.reset();
+  authorModal.style.display = "flex";
+});
+
+// close modal
+cancelAuthorBtn.addEventListener("click", () => {
+  editingAuthorId = null;
+  authorModal.style.display = "none";
+  authorForm.reset();
+});
+
+// add or edit authors
+authorForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Debug: Check if form elements exist
+  const authorNameEl = document.getElementById("author_name");
+  const authorCountryEl = document.getElementById("author_country");
+  const authorBirthYearEl = document.getElementById("author_birth_year");
+  const authorBioEl = document.getElementById("author_bio");
+  
+ 
+
+  if (!authorNameEl || !authorCountryEl || !authorBirthYearEl || !authorBioEl) {
+    alert("ERROR: Form fields not found! Check browser console for details.");
+    return;
+  }
+
+  const authorData = {
+    name: authorNameEl.value,
+    country: authorCountryEl.value,
+    birth_year: authorBirthYearEl.value,
+    bio: authorBioEl.value,
+  };
+
+  if (!authorData.name) {
+    alert("Please fill in the name.");
+    return;
+  }
+
+  try {
+    if (editingAuthorId) {
+      const res = await fetch(`${API_URL_AUTHORS}/${editingAuthorId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(authorData),
+      });
+      if (!res.ok) {
+        const error = await res.text();
+        alert("Error updating author: " + error);
+        return;
+      }
+    } else {
+      const res = await fetch(API_URL_AUTHORS, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(authorData),
+      });
+      if (!res.ok) {
+        const error = await res.text();
+        alert("Error creating author: " + error);
+        return;
+      }
+    }
+
+    authorModal.style.display = "none";
+    authorForm.reset();
+    editingAuthorId = null;
+    await renderAuthors();
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
+});
+
+// edit and delete authors
+authorsList.addEventListener("click", async (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  const card = btn.closest(".book_card");
+  const id = card.dataset.id;
+
+  if (btn.classList.contains("delete_btn")) {
+    if (!confirm("Delete this author?")) return;
+    await fetch(`${API_URL_AUTHORS}/${id}`, { method: "DELETE" });
+    await renderAuthors();
+  }
+
+  if (btn.classList.contains("edit_btn")) {
+    const res = await fetch(`${API_URL_AUTHORS}/${id}`);
+    const author = await res.json();
+
+    document.getElementById("author_name").value = author.name;
+    document.getElementById("author_country").value = author.country || "";
+    document.getElementById("author_birth_year").value = author.birth_year || "";
+    document.getElementById("author_bio").value = author.bio || "";
+    editingAuthorId = id;
+    authorModal.style.display = "flex";
+  }
+});
+
+// close modal when clicking outside
+authorModal.addEventListener("click", (e) => {
+  if (e.target === authorModal) {
+    editingAuthorId = null;
+    authorModal.style.display = "none";
+    authorForm.reset();
+  }
+});
+
+// switch sections
+authorsBtn.addEventListener("click", () => {
+  authorsSection.classList.remove("hidden");
+  readersSection.classList.add("hidden");
+  booksSection.classList.add("hidden");
+  borrowingsSection.classList.add("hidden");
+
+  authorsBtn.classList.add("active");
+  readersBtn.classList.remove("active");
+  booksBtn.classList.remove("active");
+  borrowingsBtn.classList.remove("active");
+});
+renderAuthors();
+
+//borrowings section
+const API_URL_BORROWINGS = "https://projectcrud-viktoriia2.onrender.com/api/borrowings";
+
+const borrowingsList = document.getElementById("borrowings_list");
+const borrowingModal = document.getElementById("borrowing_modal");
+const addBorrowingBtn = document.getElementById("add_borrowings_btn");
+const cancelBorrowingBtn = document.getElementById("cancel_borrowing_btn");
+const borrowingForm = document.getElementById("borrowing_form");
+const borrowingReaderSelect = document.getElementById("borrowing_reader");
+const borrowingBookSelect = document.getElementById("borrowing_book");
+
+let editingBorrowingId = null;
+
+// populate readers and books select options
+async function populateSelects() {
+  const readersRes = await fetch(API_URL_READERS);
+  const readers = await readersRes.json();
+  borrowingReaderSelect.innerHTML = `<option value="">Select reader</option>`;
+  readers.forEach(r => {
+    const option = document.createElement("option");
+    option.value = r.id;
+    option.textContent = r.name;
+    borrowingReaderSelect.appendChild(option);
+  });
+
+  const booksRes = await fetch(API_URL_BOOKS);
+  const books = await booksRes.json();
+  borrowingBookSelect.innerHTML = `<option value="">Select book</option>`;
+  books.forEach(b => {
+    const option = document.createElement("option");
+    option.value = b.id;
+    option.textContent = b.title;
+    borrowingBookSelect.appendChild(option);
+  });
+}
+
+// render borrowings
+async function renderBorrowings() {
+  try {
+    borrowingsList.innerHTML = "";
+    await populateSelects();
+
+    const res = await fetch(API_URL_BORROWINGS);
+    if (!res.ok) {
+      throw new Error("Failed to fetch borrowings: " + res.statusText);
+    }
+    const borrowings = await res.json();
+
+    borrowings.forEach(b => {
+    const div = document.createElement("div");
+    div.className = "book_card";
+    div.dataset.id = b.id;
+    const borrowDateFormatted = b.borrow_date ? new Date(b.borrow_date).toLocaleDateString("en-GB") : "-";
+    const returnDateFormatted = b.return_date ? new Date(b.return_date).toLocaleDateString("en-GB") : "-";
+
+    div.innerHTML = `
+      <div class="card_header">
+        <div>
+          <h3>${b.reader_name}</h3>
+          <p class="card_body"><svg xmlns="http://www.w3.org/2000/svg" width="14"  fill="currentColor" class="bi bi-book" viewBox="0 0 16 16"  style="padding-right: 3px;">
+          <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+          </svg> ${b.book_title}</p>
+        </div>
+        <div class="actions_btn">
+          <button class="edit_btn" title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-pencil-square" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 
+              0 0 1 .707 0l1.293 1.293zm-1.75 
+              2.456-2-2L4.939 9.21a.5.5 0 0 
+              0-.121.196l-.805 2.414a.25.25 0 0 
+              0 .316.316l2.414-.805a.5.5 0 0 
+              0 .196-.12l6.813-6.814z"/>
+              <path fill-rule="evenodd" 
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 
+              15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 
+              0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 
+              0 0 1-.5-.5v-11a.5.5 0 0 
+              1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 
+              1.5 0 0 0 1 2.5z"/>
+            </svg>
+          </button>
+          <button class="delete_btn" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+              <path d="M5.5 5.5A.5.5 0 0 1 6 
+              6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 
+              1 .5-.5m2.5 0a.5.5 0 0 1 
+              .5.5v6a.5.5 0 0 1-1 
+              0V6a.5.5 0 0 1 .5-.5m3 
+              .5a.5.5 0 0 0-1 
+              0v6a.5.5 0 0 0 1 0z"/>
+              <path d="M14.5 3a1 1 0 0 
+              1-1 1H13v9a2 2 0 0 1-2 
+              2H5a2 2 0 0 1-2-2V4h-.5a1 
+              1 0 0 1-1-1V2a1 1 0 0 
+              1 1-1H6a1 1 0 0 1 1-1h2a1 
+              1 0 0 1 1 1h3.5a1 1 0 0 
+              1 1 1zM4.118 4 4 
+              4.059V13a1 1 0 0 0 1 
+              1h6a1 1 0 0 0 1-1V4.059L11.882 
+              4zM2.5 3h11V2h-11z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <p class="card_body">Borrow Date: ${borrowDateFormatted}</p>
+      <p class="card_body">Return Date: ${returnDateFormatted}</p>
+    `;
+    borrowingsList.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Error rendering borrowings:", error);
+    
+  }
+}
+
+// open modal
+addBorrowingBtn.addEventListener("click", async () => {
+  editingBorrowingId = null;
+  borrowingForm.reset();
+  await populateSelects();
+  borrowingModal.style.display = "flex";
+});
+
+// close modal
+cancelBorrowingBtn.addEventListener("click", () => {
+  editingBorrowingId = null;
+  borrowingModal.style.display = "none";
+  borrowingForm.reset();
+});
+
+// add or edit borrowings
+borrowingForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const borrowingData = {
+    reader_id: borrowingReaderSelect.value,
+    book_id: borrowingBookSelect.value,
+    borrow_date: document.getElementById("borrow_date").value,
+    return_date: document.getElementById("return_date").value
+  };
+
+  if (!borrowingData.reader_id || !borrowingData.book_id || !borrowingData.borrow_date) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  try {
+    if (editingBorrowingId) {
+      const res = await fetch(`${API_URL_BORROWINGS}/${editingBorrowingId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrowingData)
+      });
+      if (!res.ok) {
+        const error = await res.text();
+        alert("Error updating borrowing: " + error);
+        return;
+      }
+    } else {
+      const res = await fetch(API_URL_BORROWINGS, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(borrowingData)
+      });
+      if (!res.ok) {
+        const error = await res.text();
+        alert("Error creating borrowing: " + error);
+        return;
+      }
+    }
+
+    borrowingModal.style.display = "none";
+    borrowingForm.reset();
+    editingBorrowingId = null;
+    await renderBorrowings();
+  } catch (error) {
+    alert("Error: " + error.message);
+  }
+});
+
+// edit and delete borrowings
+borrowingsList.addEventListener("click", async (e) => {
+  const btn = e.target.closest("button");
+  if (!btn) return;
+  const card = btn.closest(".book_card");
+  const id = card.dataset.id;
+
+  if (btn.classList.contains("delete_btn")) {
+    if (!confirm("Delete this borrowing?")) return;
+    await fetch(`${API_URL_BORROWINGS}/${id}`, { method: "DELETE" });
+    await renderBorrowings();
+  }
+
+  if (btn.classList.contains("edit_btn")) {
+    const res = await fetch(`${API_URL_BORROWINGS}/${id}`);
+    const borrowing = await res.json();
+
+    borrowingReaderSelect.value = borrowing.reader_id;
+    borrowingBookSelect.value = borrowing.book_id;
+    document.getElementById("borrow_date").value = borrowing.borrow_date;
+    document.getElementById("return_date").value = borrowing.return_date || "";
+    editingBorrowingId = id;
+    borrowingModal.style.display = "flex";
+  }
+});
+
+// close modal when clicking outside
+borrowingModal.addEventListener("click", (e) => {
+  if (e.target === borrowingModal) {
+    editingBorrowingId = null;
+    borrowingModal.style.display = "none";
+    borrowingForm.reset();
+  }
+});
+
+borrowingsBtn.addEventListener("click", () => {
+  borrowingsSection.classList.remove("hidden");
+  readersSection.classList.add("hidden");
+  booksSection.classList.add("hidden");
+  authorsSection.classList.add("hidden");
+
+  borrowingsBtn.classList.add("active");
+  readersBtn.classList.remove("active");
+  booksBtn.classList.remove("active");
+  authorsBtn.classList.remove("active");
+});
+// initial render
+renderBorrowings();
 

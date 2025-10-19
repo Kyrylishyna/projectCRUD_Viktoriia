@@ -19,3 +19,21 @@ CREATE TABLE IF NOT EXISTS books(
     genre VARCHAR(100) NOT NULL,
     FOREIGN KEY (reader_id) REFERENCES readers(id) ON DELETE SET NULL
 );
+
+CREATE TABLE authors (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  country VARCHAR(50),
+  birth_year INT,
+  bio TEXT
+);
+
+CREATE TABLE borrowings (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reader_id INT,
+  book_id INT,
+  borrow_date DATE,
+  return_date DATE,
+  FOREIGN KEY (reader_id) REFERENCES readers(id),
+  FOREIGN KEY (book_id) REFERENCES books(id)
+);

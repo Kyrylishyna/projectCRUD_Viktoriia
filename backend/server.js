@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const booksRouter = require('./routes/books');
 const readerRouter = require('./routes/readers');
+const authorsRouter = require('./routes/authors');
+const borrowingsRouter = require('./routes/borrowings');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,8 @@ app.use(express.json());
 
 app.use('/api/books', booksRouter);
 app.use('/api/readers', readerRouter);
+app.use('/api/authors', authorsRouter);
+app.use('/api/borrowings', borrowingsRouter);
 
 app.use((err, req, res, next) => {
     console.error(err);

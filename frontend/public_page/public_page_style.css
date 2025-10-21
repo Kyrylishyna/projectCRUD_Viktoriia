@@ -1,0 +1,302 @@
+body{
+    font-family: sans-serif;
+    background-color: #fff4dd;
+    margin: 0;
+    padding: 0;;
+}
+
+
+
+/*header*/
+
+header{
+    padding: 30px;
+    background-color: #fffdf8;
+    border-bottom: 1px solid #ffd580;
+    position: sticky;
+    top: 0;
+  z-index: 10;
+}
+
+#header_content{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+#logo{
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+
+#header_text h1, #header_text p {
+    margin: 0;
+    padding: 3px;  
+}
+
+h1{
+    font-weight: 600;
+    color: #78350f;
+    font-size: 18px;
+}
+
+#header_text p{
+    color: #b45309;
+    font-size: 16px; ;
+}
+
+/* eader btn*/
+#auth_btn{
+    margin-left: 10px;
+
+}
+
+#sign_up_btn{
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background: linear-gradient(to right, #f59e0b, #f97316);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#log_in_btn{
+    background-color: white;
+    color: orange;
+    border-color: orange;
+    border-style: solid;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#log_in_btn:hover{
+    background-color: #ffd580;
+    color: rgb(52, 38, 11);
+}
+/*middle part*/
+
+#middle_part{
+    height: 40vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+}
+
+
+#middle_part h2{
+    color: #78350f;
+    font-size: 16px;
+    margin: 0;
+}
+
+#middle_part p{
+    color: #b45309;
+    font-size: 16px;
+    line-height: 28px;
+    width: 650px;
+    margin: 15px 0 20px 0 ;
+}
+
+#middle_part button{
+background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background: linear-gradient(to right, #f59e0b, #f97316);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#middle_part button:hover,
+#sign_up_btn:hover{
+    background: linear-gradient(to right, #fbbf24, #fb923c);
+  transition: background-color 0.2s;;
+}
+
+/*cards section*/
+
+#feature{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 40px;
+}
+
+.feature_card{
+    flex: 1 1 300px; 
+    background-color: #fffdf8;
+    border-radius: 10px;
+    padding: 25px;
+    border-color: #ffd580;
+    border-style: solid;
+
+}
+
+.feature_card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.08);
+}
+
+.feature_card svg{
+    background: linear-gradient(to right, #f59e0b, #f97316);
+    padding: 15px;
+    width:30px;
+    border-radius: 10px;
+}
+
+.feature_card h3{
+    font-weight: 500;
+    color: #78350f;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.feature_card p{
+
+    color: #b45309;
+    font-size: 14px;
+    margin-top: 5px;
+    line-height: 23px;
+    
+}
+
+/*modal*/
+
+.modal{
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal_content{
+background-color:  #fff4dd;
+    margin: 10% auto;
+    padding: 20px;
+    width: 400px;
+    border-radius: 8px;
+    position: relative;
+    border-style: solid;
+    border-color: #ffd580;
+}
+
+.close{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.form_text{
+    text-align: center;
+}
+
+.form_text h2{
+    color: #78350f;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.form_text p{
+    color: #b45309;
+    font-size: 15px;
+    margin-top: 7px;
+}
+
+.auth_form {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.hidden {
+    display: none;
+}
+
+label{
+    font-size: 14px;
+    color: #78350f;
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+
+input{
+    padding: 5px 10px;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: #ffd580;
+    background-color: #fffdf8;
+}
+
+.buttons_auth{
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+#cancelBtnSignup,
+#cancelBtnLogin{
+    background-color: white;
+    color: orange;
+    border-color: orange;
+    border-style: solid;
+}
+
+.signup_login_buttons{
+    border-style: none;
+    background: linear-gradient(to right, #f59e0b, #f97316);
+    color: #fffdf8;
+
+}
+.buttons_auth button{
+    width: 50%;
+    padding:7px 0;
+    margin-top: 15px;
+    border-radius: 8px;
+        font-weight: 600;
+
+}
+
+form p{
+    color: #b45309;
+    font-size: 15px;
+    margin-top: 18px;
+    text-align: center;
+}
+
+form span{
+    font-weight: bolder;
+    cursor: pointer;
+    color: #f97316;
+}
+
+#forgot_password{
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+

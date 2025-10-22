@@ -1,3 +1,45 @@
+// ===== AUTHENTICATION =====
+function getToken() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('❌ No token found. Redirecting to login...');
+    window.location.href = '/home';
+    return null;
+  }
+  return token;
+}
+
+function getHeaders(token) {
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+}
+
+// Check if user is logged in on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    alert('You must be logged in to access this page');
+    window.location.href = '/home';
+  }
+});
+
+// Logout function
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '/home';
+}
+
+// Wire up logout button
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('logout_btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', logout);
+  }
+});
+
+// ===== API URLS =====
 const API_URL_BOOKS = "https://projectcrud-viktoriia2.onrender.com/api/books";
 
 
@@ -22,7 +64,21 @@ let editingBookId = null;
 // render books
 async function renderBooks() {
   booksList.innerHTML = "";
-  const res = await fetch(API_URL_BOOKS);
+  const token = getToken();
+  if (!token) return;
+  
+  const res = await fetch(API_URL_BOOKS, {
+    headers: getHeaders(token)
+  });
+  
+  if (!res.ok) {
+    if (res.status === 401) {
+      logout();
+      return;
+    }
+    throw new Error('Failed to fetch books');
+  }
+  
   const books = await res.json();
 
   booksCountEl.textContent = books.length;
@@ -129,16 +185,19 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  const token = getToken();
+  if (!token) return;
+  
   if (editingBookId) {
     await fetch(`${API_URL_BOOKS}/${editingBookId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(token),
       body: JSON.stringify(bookData),
     });
   } else {
     await fetch(API_URL_BOOKS, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(token),
       body: JSON.stringify(bookData),
     });
   }
@@ -158,12 +217,21 @@ booksList.addEventListener("click", async (e) => {
 
   if (btn.classList.contains("delete_btn")) {
     if (!confirm("Delete this book?")) return;
-    await fetch(`${API_URL_BOOKS}/${id}`, { method: "DELETE" });
+    const token = getToken();
+    if (!token) return;
+    await fetch(`${API_URL_BOOKS}/${id}`, { 
+      method: "DELETE",
+      headers: getHeaders(token)
+    });
     await renderBooks();
   }
 
   if (btn.classList.contains("edit_btn")) {
-    const res = await fetch(`${API_URL_BOOKS}/${id}`);
+    const token = getToken();
+    if (!token) return;
+    const res = await fetch(`${API_URL_BOOKS}/${id}`, {
+      headers: getHeaders(token)
+    });
     const book = await res.json();
 
     document.getElementById("title").value = book.title;
@@ -222,7 +290,21 @@ let editingReaderId = null;
 
 async function renderReaders() {
   readersList.innerHTML = "";
-  const res = await fetch(API_URL_READERS);
+  const token = getToken();
+  if (!token) return;
+  
+  const res = await fetch(API_URL_READERS, {
+    headers: getHeaders(token)
+  });
+  
+  if (!res.ok) {
+    if (res.status === 401) {
+      logout();
+      return;
+    }
+    throw new Error('Failed to fetch readers');
+  }
+  
   const readers = await res.json();
 
   readersCountEl.textContent = readers.length;
@@ -325,16 +407,19 @@ readerForm.addEventListener("submit", async (e) => {
     return;
   }
 
+  const token = getToken();
+  if (!token) return;
+  
   if (editingReaderId) {
     await fetch(`${API_URL_READERS}/${editingReaderId}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(token),
       body: JSON.stringify(newReader),
     });
   } else {
     await fetch(API_URL_READERS, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: getHeaders(token),
       body: JSON.stringify(newReader),
     });
   }
@@ -353,14 +438,23 @@ readersList.addEventListener("click", async (e) => {
 
   if (btn.classList.contains("delete_btn")) {
     if (!confirm("Delete this reader?")) return;
-    await fetch(`${API_URL_READERS}/${id}`, { method: "DELETE" });
+    const token = getToken();
+    if (!token) return;
+    await fetch(`${API_URL_READERS}/${id}`, { 
+      method: "DELETE",
+      headers: getHeaders(token)
+    });
     await renderReaders();
     return;
   }
 
   if (btn.classList.contains("edit_btn")) {
     try {
-      const res = await fetch(`${API_URL_READERS}/${id}`);
+      const token = getToken();
+      if (!token) return;
+      const res = await fetch(`${API_URL_READERS}/${id}`, {
+        headers: getHeaders(token)
+      });
       if (!res.ok) {
         alert("Error fetching reader data");
         return;
@@ -418,8 +512,17 @@ let editingAuthorId = null;
 async function renderAuthors() {
   
     authorsList.innerHTML = "";
-    const res = await fetch(API_URL_AUTHORS);
+    const token = getToken();
+    if (!token) return;
+    
+    const res = await fetch(API_URL_AUTHORS, {
+      headers: getHeaders(token)
+    });
     if (!res.ok) {
+      if (res.status === 401) {
+        logout();
+        return;
+      }
       throw new Error("Failed to fetch authors: " + res.statusText);
     }
     const authors = await res.json();
@@ -540,10 +643,13 @@ authorForm.addEventListener("submit", async (e) => {
   }
 
   try {
+    const token = getToken();
+    if (!token) return;
+    
     if (editingAuthorId) {
       const res = await fetch(`${API_URL_AUTHORS}/${editingAuthorId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: getHeaders(token),
         body: JSON.stringify(authorData),
       });
       if (!res.ok) {
@@ -554,7 +660,7 @@ authorForm.addEventListener("submit", async (e) => {
     } else {
       const res = await fetch(API_URL_AUTHORS, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getHeaders(token),
         body: JSON.stringify(authorData),
       });
       if (!res.ok) {
@@ -582,12 +688,21 @@ authorsList.addEventListener("click", async (e) => {
 
   if (btn.classList.contains("delete_btn")) {
     if (!confirm("Delete this author?")) return;
-    await fetch(`${API_URL_AUTHORS}/${id}`, { method: "DELETE" });
+    const token = getToken();
+    if (!token) return;
+    await fetch(`${API_URL_AUTHORS}/${id}`, { 
+      method: "DELETE",
+      headers: getHeaders(token)
+    });
     await renderAuthors();
   }
 
   if (btn.classList.contains("edit_btn")) {
-    const res = await fetch(`${API_URL_AUTHORS}/${id}`);
+    const token = getToken();
+    if (!token) return;
+    const res = await fetch(`${API_URL_AUTHORS}/${id}`, {
+      headers: getHeaders(token)
+    });
     const author = await res.json();
 
     document.getElementById("author_name").value = author.name;
@@ -637,7 +752,12 @@ let editingBorrowingId = null;
 
 // populate readers and books select options
 async function populateSelects() {
-  const readersRes = await fetch(API_URL_READERS);
+  const token = getToken();
+  if (!token) return;
+  
+  const readersRes = await fetch(API_URL_READERS, {
+    headers: getHeaders(token)
+  });
   const readers = await readersRes.json();
   borrowingReaderSelect.innerHTML = `<option value="">Select reader</option>`;
   readers.forEach(r => {
@@ -647,7 +767,9 @@ async function populateSelects() {
     borrowingReaderSelect.appendChild(option);
   });
 
-  const booksRes = await fetch(API_URL_BOOKS);
+  const booksRes = await fetch(API_URL_BOOKS, {
+    headers: getHeaders(token)
+  });
   const books = await booksRes.json();
   borrowingBookSelect.innerHTML = `<option value="">Select book</option>`;
   books.forEach(b => {
@@ -664,8 +786,17 @@ async function renderBorrowings() {
     borrowingsList.innerHTML = "";
     await populateSelects();
 
-    const res = await fetch(API_URL_BORROWINGS);
+    const token = getToken();
+    if (!token) return;
+    
+    const res = await fetch(API_URL_BORROWINGS, {
+      headers: getHeaders(token)
+    });
     if (!res.ok) {
+      if (res.status === 401) {
+        logout();
+        return;
+      }
       throw new Error("Failed to fetch borrowings: " + res.statusText);
     }
     const borrowings = await res.json();
@@ -771,10 +902,13 @@ borrowingForm.addEventListener("submit", async (e) => {
   }
 
   try {
+    const token = getToken();
+    if (!token) return;
+    
     if (editingBorrowingId) {
       const res = await fetch(`${API_URL_BORROWINGS}/${editingBorrowingId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
       });
       if (!res.ok) {
@@ -785,7 +919,7 @@ borrowingForm.addEventListener("submit", async (e) => {
     } else {
       const res = await fetch(API_URL_BORROWINGS, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
       });
       if (!res.ok) {
@@ -813,12 +947,21 @@ borrowingsList.addEventListener("click", async (e) => {
 
   if (btn.classList.contains("delete_btn")) {
     if (!confirm("Delete this borrowing?")) return;
-    await fetch(`${API_URL_BORROWINGS}/${id}`, { method: "DELETE" });
+    const token = getToken();
+    if (!token) return;
+    await fetch(`${API_URL_BORROWINGS}/${id}`, { 
+      method: "DELETE",
+      headers: getHeaders(token)
+    });
     await renderBorrowings();
   }
 
   if (btn.classList.contains("edit_btn")) {
-    const res = await fetch(`${API_URL_BORROWINGS}/${id}`);
+    const token = getToken();
+    if (!token) return;
+    const res = await fetch(`${API_URL_BORROWINGS}/${id}`, {
+      headers: getHeaders(token)
+    });
     const borrowing = await res.json();
 
     borrowingReaderSelect.value = borrowing.reader_id;
@@ -853,3 +996,27 @@ borrowingsBtn.addEventListener("click", () => {
 // initial render
 renderBorrowings();
 
+const token = localStorage.getItem('token');
+
+if(!token){
+  window.location.href = '/public_page/public_page.html';
+}else{
+  fetch('https://projectcrud-viktoriia2.onrender.com/api/users/me', {
+    headers:{
+      'Authorization':`Bearer ${token}`
+    }
+  })
+
+  .then(res =>{
+    if(!res.ok) throw new Error('Unauthorized');
+    return res.json()
+  } )
+  .then(user => {
+    console.log("Logged in user:", user);
+  })
+
+  .catch(() => {
+    localStorage.removeItem('token');
+    window.location.href = '/public_page/public_page.html';
+  })
+}

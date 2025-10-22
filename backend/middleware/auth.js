@@ -1,5 +1,10 @@
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+
+if (!process.env.JWT_SECRET) {
+    throw new Error("❌ JWT_SECRET environment variable is missing! Set it in .env file");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Middleware function to verify the token
 

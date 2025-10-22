@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { authenticateToken } = require('../middleware/auth');
 
 // GET all borrowings
-router.get('/', async (req, res, next) => {
+router.get('/', authenticateToken, async (req, res, next) => {
     try {
         const [rows] = await db.query(
             `SELECT br.*, r.name AS reader_name, b.title AS book_title
@@ -19,7 +20,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET borrowing by ID
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', authenticateToken, async (req, res, next) => {
     try {
         const id = parseInt(req.params.id, 10);
         const [rows] = await db.query('SELECT * FROM borrowings WHERE id = ?', [id]);
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST create new borrowing
-router.post('/', async (req, res, next) => {
+router.post('/', authenticateToken, async (req, res, next) => {
     try {
         const { reader_id, book_id, borrow_date, return_date } = req.body;
 
@@ -60,7 +61,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // PUT update borrowing by ID
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authenticateToken, async (req, res, next) => {
     try {
         const id = parseInt(req.params.id, 10);
         const { reader_id, book_id, borrow_date, return_date } = req.body;
@@ -91,7 +92,7 @@ router.put('/:id', async (req, res, next) => {
     }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', authenticateToken, async (req, res, next) => {
     try {
         const id = parseInt(req.params.id, 10);
         const [result] = await db.query('DELETE FROM borrowings WHERE id = ?', [id]);

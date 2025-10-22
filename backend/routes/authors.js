@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { authenticateToken } = require('../middleware/auth');
 
-
-router.get('/', async (req, res, next) => {
+router.get('/', authenticateToken, async (req, res, next) => {
   try {
     const [rows] = await db.query('SELECT * FROM authors ORDER BY id');
     res.json(rows);
@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 });
 
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id',authenticateToken,  async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const [rows] = await db.query('SELECT * FROM authors WHERE id = ?', [id]);
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 
-router.post('/', async (req, res, next) => {
+router.post('/',authenticateToken, async (req, res, next) => {
   try {
     const { name, country, birth_year, bio } = req.body;
 
@@ -46,7 +46,7 @@ router.post('/', async (req, res, next) => {
 });
 
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', authenticateToken, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const { name, country, birth_year, bio } = req.body;
@@ -70,7 +70,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', authenticateToken, async (req, res, next) => {
   try {
     const id = parseInt(req.params.id, 10);
     const [result] = await db.query('DELETE FROM authors WHERE id = ?', [id]);

@@ -16,8 +16,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.options('*', cors());
 app.use(express.json());
-app.use('./api/users', usersRouter);
 
+// API routes
+app.use('/api/users', usersRouter);
 app.use('/api/books', booksRouter);
 app.use('/api/readers', readerRouter);
 app.use('/api/authors', authorsRouter);

@@ -3,14 +3,19 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { authenticateToken } = require('../middleware/auth');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+if (!process.env.JWT_SECRET) {
+    throw new Error("❌ JWT_SECRET environment variable is missing! Set it in .env file");
+}
+
+const JWT_SECRET = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
 
 // Registration
 router.post('/register', async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { full_name, email, password, role } = req.body;
 
     if (!email || !password || password.length < 6) {
       return res.status(400).json({ error: 'Email required and password min 6 chars' });
@@ -25,7 +30,7 @@ router.post('/register', async (req, res, next) => {
 
     const [result] = await db.query(
       'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name || null, email, password_hash, role || 'user']
+      [full_name || null, email, password_hash, role || 'user']
     );
 
     const [user] = await db.query('SELECT id, name, email, role, created_at FROM users WHERE id = ?', [result.insertId]);
@@ -63,6 +68,19 @@ router.post('/login', async (req, res, next) => {
     );
 
     res.json({ token });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/me', authenticateToken, async (req, res, next) => {
+  try {
+    const [rows] = await db.query(
+      'SELECT id, name, email, role, created_at FROM users WHERE id = ?',
+      [req.user.id]
+    );
+    if (rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    res.json(rows[0]);
   } catch (err) {
     next(err);
   }

@@ -49,3 +49,77 @@ cancelBtnLogin.addEventListener('click', () => {
 cancelBtnSignup.addEventListener('click', () => {
     modal.style.display = 'none';
 })
+
+
+
+//backend
+
+
+signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const full_name = signupForm.querySelector('input[name="full_name"]').value;
+    const email = signupForm.querySelector('input[name="login"]').value;
+    const password = signupForm.querySelector('input[name="password"]').value;
+    const passwordRepeat = signupForm.querySelector('input[name="passwordRepeat"]').value;
+
+    if(password !== passwordRepeat){
+        alert("Passwords do not match!");
+        return;
+    }
+
+    try{
+        const response =await fetch ('https://projectcrud-viktoriia2.onrender.com/api/users/register', {
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            
+            },
+            body: JSON.stringify({full_name, email, password})
+        });
+
+        const data = await response.json(); 
+
+        if(!response.ok){
+            throw new Error(data.message || "Registration failed");
+        }
+
+        alert("Registration successful! You can now log in.");
+        signupForm.reset();
+        signupForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+    } catch (err){
+        console.error(err);
+        alert("Error: " + err.message);
+    }
+});
+
+//login
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = loginForm.querySelector('input[name="login"]').value;
+    const password = loginForm.querySelector('input[name="password"]').value;
+
+    try{
+        const response = await fetch('https://projectcrud-viktoriia2.onrender.com/api/users/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({email, password})
+        });
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data.message || "Login failed");
+        }
+
+        localStorage.setItem('token', data.token);
+
+        window.location.href='/main-page.html';
+
+    } catch(err){
+        console.error(err);
+        alert("Error: "+ err.message);
+    }
+});

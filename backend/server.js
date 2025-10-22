@@ -8,12 +8,15 @@ const readerRouter = require('./routes/readers');
 const authorsRouter = require('./routes/authors');
 const borrowingsRouter = require('./routes/borrowings');
 
+const usersRouter = require('./routes/users');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.options('*', cors());
 app.use(express.json());
+app.use('./api/users', usersRouter);
 
 app.use('/api/books', booksRouter);
 app.use('/api/readers', readerRouter);

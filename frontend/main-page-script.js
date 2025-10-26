@@ -5,7 +5,7 @@ function getToken() {
   const token = localStorage.getItem('token');
   if (!token) {
     alert('❌ No token found. Redirecting to login...');
-    window.location.href = 'http://localhost:3000/home';
+    window.location.href = 'https://projectcrud-viktoriia2.onrender.com/home';
     return null;
   }
   return token;
@@ -23,14 +23,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) {
     alert('You must be logged in to access this page');
-    window.location.href = 'http://localhost:3000/home';
+    window.location.href = 'https://projectcrud-viktoriia2.onrender.com/home';
   }
 });
 
 // Logout function
 function logout() {
   localStorage.removeItem('token');
-  window.location.href = 'http://localhost:3000/home';
+  window.location.href = 'https://projectcrud-viktoriia2.onrender.com/home';
 }
 
 // Wire up logout button
@@ -70,7 +70,7 @@ async function renderBooks() {
   const token = getToken();
   if (!token) return;
   
-  const res = await fetch(API_URL_LOCAL_BOOKS, {
+  const res = await fetch(API_URL_BOOKS, {
     headers: getHeaders(token)
   });
   
@@ -192,7 +192,7 @@ form.addEventListener("submit", async (e) => {
   if (!token) return;
   
   if (editingBookId) {
-    await fetch(`${API_URL_LOCAL_BOOKS}/${editingBookId}`, {
+    await fetch(`${API_URL_BOOKS}/${editingBookId}`, {
       method: "PUT",
       headers: getHeaders(token),
       body: JSON.stringify(bookData),
@@ -222,7 +222,7 @@ booksList.addEventListener("click", async (e) => {
     if (!confirm("Delete this book?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_LOCAL_BOOKS}/${id}`, { 
+    await fetch(`${API_URL_BOOKS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -232,7 +232,7 @@ booksList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_LOCAL_BOOKS}/${id}`, {
+    const res = await fetch(`${API_URL_BOOKS}/${id}`, {
       headers: getHeaders(token)
     });
     const book = await res.json();
@@ -297,7 +297,7 @@ async function renderReaders() {
   const token = getToken();
   if (!token) return;
   
-  const res = await fetch(API_URL_LOCAL_READERS, {
+  const res = await fetch(API_URL_READERS, {
     headers: getHeaders(token)
   });
   
@@ -415,13 +415,13 @@ readerForm.addEventListener("submit", async (e) => {
   if (!token) return;
   
   if (editingReaderId) {
-    await fetch(`${API_URL_LOCAL_READERS}/${editingReaderId}`, {
+    await fetch(`${API_URL_READERS}/${editingReaderId}`, {
       method: "PUT",
       headers: getHeaders(token),
       body: JSON.stringify(newReader),
     });
   } else {
-    await fetch(API_URL_LOCAL_READERS, {
+    await fetch(API_URL_READERS, {
       method: "POST",
       headers: getHeaders(token),
       body: JSON.stringify(newReader),
@@ -444,7 +444,7 @@ readersList.addEventListener("click", async (e) => {
     if (!confirm("Delete this reader?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_LOCAL_READERS}/${id}`, { 
+    await fetch(`${API_URL_READERS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -456,7 +456,7 @@ readersList.addEventListener("click", async (e) => {
     try {
       const token = getToken();
       if (!token) return;
-      const res = await fetch(`${API_URL_LOCAL_READERS}/${id}`, {
+      const res = await fetch(`${API_URL_READERS}/${id}`, {
         headers: getHeaders(token)
       });
       if (!res.ok) {
@@ -520,7 +520,7 @@ async function renderAuthors() {
     const token = getToken();
     if (!token) return;
     
-    const res = await fetch(API_URL_LOCAL_AUTHORS, {
+    const res = await fetch(API_URL_AUTHORS, {
       headers: getHeaders(token)
     });
     if (!res.ok) {
@@ -652,7 +652,7 @@ authorForm.addEventListener("submit", async (e) => {
     if (!token) return;
     
     if (editingAuthorId) {
-      const res = await fetch(`${API_URL_LOCAL_AUTHORS}/${editingAuthorId}`, {
+      const res = await fetch(`${API_URL_AUTHORS}/${editingAuthorId}`, {
         method: "PUT",
         headers: getHeaders(token),
         body: JSON.stringify(authorData),
@@ -663,7 +663,7 @@ authorForm.addEventListener("submit", async (e) => {
         return;
       }
     } else {
-      const res = await fetch(API_URL_LOCAL_AUTHORS, {
+      const res = await fetch(API_URL_AUTHORS, {
         method: "POST",
         headers: getHeaders(token),
         body: JSON.stringify(authorData),
@@ -695,7 +695,7 @@ authorsList.addEventListener("click", async (e) => {
     if (!confirm("Delete this author?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_LOCAL_AUTHORS}/${id}`, { 
+    await fetch(`${API_URL_AUTHORS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -705,7 +705,7 @@ authorsList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_LOCAL_AUTHORS}/${id}`, {
+    const res = await fetch(`${API_URL_AUTHORS}/${id}`, {
       headers: getHeaders(token)
     });
     const author = await res.json();
@@ -763,7 +763,7 @@ async function populateSelects() {
   const token = getToken();
   if (!token) return;
   
-  const readersRes = await fetch(API_URL_LOCAL_READERS, {
+  const readersRes = await fetch(API_URL_READERS, {
     headers: getHeaders(token)
   });
   const readers = await readersRes.json();
@@ -775,7 +775,7 @@ async function populateSelects() {
     borrowingReaderSelect.appendChild(option);
   });
 
-  const booksRes = await fetch(API_URL_LOCAL_BOOKS, {
+  const booksRes = await fetch(API_URL_BOOKS, {
     headers: getHeaders(token)
   });
   const books = await booksRes.json();
@@ -797,7 +797,7 @@ async function renderBorrowings() {
     const token = getToken();
     if (!token) return;
     
-    const res = await fetch(API_URL_LOCAL_BORROWINGS, {
+    const res = await fetch(API_URL_BORROWINGS, {
       headers: getHeaders(token)
     });
     if (!res.ok) {
@@ -914,7 +914,7 @@ borrowingForm.addEventListener("submit", async (e) => {
     if (!token) return;
     
     if (editingBorrowingId) {
-      const res = await fetch(`${API_URL_LOCAL_BORROWINGS}/${editingBorrowingId}`, {
+      const res = await fetch(`${API_URL_BORROWINGS}/${editingBorrowingId}`, {
         method: "PUT",
         headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
@@ -925,7 +925,7 @@ borrowingForm.addEventListener("submit", async (e) => {
         return;
       }
     } else {
-      const res = await fetch(API_URL_LOCAL_BORROWINGS, {
+      const res = await fetch(API_URL_BORROWINGS, {
         method: "POST",
         headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
@@ -957,7 +957,7 @@ borrowingsList.addEventListener("click", async (e) => {
     if (!confirm("Delete this borrowing?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_LOCAL_BORROWINGS}/${id}`, { 
+    await fetch(`${API_URL_BORROWINGS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -967,7 +967,7 @@ borrowingsList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_LOCAL_BORROWINGS}/${id}`, {
+    const res = await fetch(`${API_URL_BORROWINGS}/${id}`, {
       headers: getHeaders(token)
     });
     const borrowing = await res.json();
@@ -1011,7 +1011,7 @@ const API_LOCAL_ME="http://localhost:3000/api/users/me"
 if(!token){
   window.location.href = '/public_page/public_page.html';
 }else{
-  fetch(`${API_LOCAL_ME}`, {
+  fetch(`${API_ME}`, {
     headers:{
       'Authorization':`Bearer ${token}`
     }

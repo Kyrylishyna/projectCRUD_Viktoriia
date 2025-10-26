@@ -4,7 +4,6 @@ require('dotenv').config();
 const path = require('path');
 
 
-
 const booksRouter = require('./routes/books');
 const readerRouter = require('./routes/readers');
 const authorsRouter = require('./routes/authors');
@@ -15,8 +14,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
+//app.options('*', cors());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use(express.json());
+
 
 // API routes
 app.use('/api/users', usersRouter);
@@ -24,7 +25,6 @@ app.use('/api/books', booksRouter);
 app.use('/api/readers', readerRouter);
 app.use('/api/authors', authorsRouter);
 app.use('/api/borrowings', borrowingsRouter);
-
 
 app.get('/home', (req, res) => {
   try {

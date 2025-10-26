@@ -68,8 +68,11 @@ signupForm.addEventListener('submit', async (e) => {
         return;
     }
 
+
+    const API_LOCAL_USER_SIGNUP_URL = 'http://localhost:3000/api/users/register'; 
+    const API_USER_SIGNUP_URL = 'https://projectcrud-viktoriia2.onrender.com/api/users/register'; 
     try{
-        const response =await fetch ('https://projectcrud-viktoriia2.onrender.com/api/users/register', {
+        const response =await fetch (`${API_USER_SIGNUP_URL}`, {
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
@@ -102,8 +105,11 @@ loginForm.addEventListener('submit', async (e) => {
     const email = loginForm.querySelector('input[name="login"]').value;
     const password = loginForm.querySelector('input[name="password"]').value;
 
+
+const API_LOCAL_LOGIN_URL = 'http://localhost:3000/api/users/login';
+const API_LOGIN_URL = 'https://projectcrud-viktoriia2.onrender.com/api/users/login'; 
     try{
-        const response = await fetch('https://projectcrud-viktoriia2.onrender.com/api/users/login', {
+        const response = await fetch(`${API_LOGIN_URL}`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body:JSON.stringify({email, password})

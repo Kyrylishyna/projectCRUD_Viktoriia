@@ -1,9 +1,11 @@
 // ===== AUTHENTICATION =====
+
+
 function getToken() {
   const token = localStorage.getItem('token');
   if (!token) {
     alert('❌ No token found. Redirecting to login...');
-    window.location.href = '/home';
+    window.location.href = 'http://localhost:3000/home';
     return null;
   }
   return token;
@@ -21,14 +23,14 @@ window.addEventListener('DOMContentLoaded', () => {
   const token = localStorage.getItem('token');
   if (!token) {
     alert('You must be logged in to access this page');
-    window.location.href = '/home';
+    window.location.href = 'http://localhost:3000/home';
   }
 });
 
 // Logout function
 function logout() {
   localStorage.removeItem('token');
-  window.location.href = '/home';
+  window.location.href = 'http://localhost:3000/home';
 }
 
 // Wire up logout button
@@ -41,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ===== API URLS =====
 const API_URL_BOOKS = "https://projectcrud-viktoriia2.onrender.com/api/books";
+const API_URL_LOCAL_BOOKS = "http://localhost:3000/api/books"
 
 
 const borrowingsBtn = document.getElementById("button_borrowings");
@@ -67,7 +70,7 @@ async function renderBooks() {
   const token = getToken();
   if (!token) return;
   
-  const res = await fetch(API_URL_BOOKS, {
+  const res = await fetch(API_URL_LOCAL_BOOKS, {
     headers: getHeaders(token)
   });
   
@@ -189,7 +192,7 @@ form.addEventListener("submit", async (e) => {
   if (!token) return;
   
   if (editingBookId) {
-    await fetch(`${API_URL_BOOKS}/${editingBookId}`, {
+    await fetch(`${API_URL_LOCAL_BOOKS}/${editingBookId}`, {
       method: "PUT",
       headers: getHeaders(token),
       body: JSON.stringify(bookData),
@@ -219,7 +222,7 @@ booksList.addEventListener("click", async (e) => {
     if (!confirm("Delete this book?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_BOOKS}/${id}`, { 
+    await fetch(`${API_URL_LOCAL_BOOKS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -229,7 +232,7 @@ booksList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_BOOKS}/${id}`, {
+    const res = await fetch(`${API_URL_LOCAL_BOOKS}/${id}`, {
       headers: getHeaders(token)
     });
     const book = await res.json();
@@ -273,6 +276,7 @@ renderBooks();
 // readers section
 
 const API_URL_READERS = "https://projectcrud-viktoriia2.onrender.com/api/readers";
+const API_URL_LOCAL_READERS = "http://localhost:3000/api/readers";
 
 const readersList = document.getElementById("readers_list");
 const readerModal = document.getElementById("reader_modal");
@@ -293,7 +297,7 @@ async function renderReaders() {
   const token = getToken();
   if (!token) return;
   
-  const res = await fetch(API_URL_READERS, {
+  const res = await fetch(API_URL_LOCAL_READERS, {
     headers: getHeaders(token)
   });
   
@@ -411,13 +415,13 @@ readerForm.addEventListener("submit", async (e) => {
   if (!token) return;
   
   if (editingReaderId) {
-    await fetch(`${API_URL_READERS}/${editingReaderId}`, {
+    await fetch(`${API_URL_LOCAL_READERS}/${editingReaderId}`, {
       method: "PUT",
       headers: getHeaders(token),
       body: JSON.stringify(newReader),
     });
   } else {
-    await fetch(API_URL_READERS, {
+    await fetch(API_URL_LOCAL_READERS, {
       method: "POST",
       headers: getHeaders(token),
       body: JSON.stringify(newReader),
@@ -440,7 +444,7 @@ readersList.addEventListener("click", async (e) => {
     if (!confirm("Delete this reader?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_READERS}/${id}`, { 
+    await fetch(`${API_URL_LOCAL_READERS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -452,7 +456,7 @@ readersList.addEventListener("click", async (e) => {
     try {
       const token = getToken();
       if (!token) return;
-      const res = await fetch(`${API_URL_READERS}/${id}`, {
+      const res = await fetch(`${API_URL_LOCAL_READERS}/${id}`, {
         headers: getHeaders(token)
       });
       if (!res.ok) {
@@ -497,6 +501,7 @@ renderReaders();
 
 //author section 
 const API_URL_AUTHORS = "https://projectcrud-viktoriia2.onrender.com/api/authors";
+const API_URL_LOCAL_AUTHORS = "http://localhost:3000/api/authors";
 
 const authorsList = document.getElementById("authors_list");
 const authorModal = document.getElementById("author_modal");
@@ -515,7 +520,7 @@ async function renderAuthors() {
     const token = getToken();
     if (!token) return;
     
-    const res = await fetch(API_URL_AUTHORS, {
+    const res = await fetch(API_URL_LOCAL_AUTHORS, {
       headers: getHeaders(token)
     });
     if (!res.ok) {
@@ -647,7 +652,7 @@ authorForm.addEventListener("submit", async (e) => {
     if (!token) return;
     
     if (editingAuthorId) {
-      const res = await fetch(`${API_URL_AUTHORS}/${editingAuthorId}`, {
+      const res = await fetch(`${API_URL_LOCAL_AUTHORS}/${editingAuthorId}`, {
         method: "PUT",
         headers: getHeaders(token),
         body: JSON.stringify(authorData),
@@ -658,7 +663,7 @@ authorForm.addEventListener("submit", async (e) => {
         return;
       }
     } else {
-      const res = await fetch(API_URL_AUTHORS, {
+      const res = await fetch(API_URL_LOCAL_AUTHORS, {
         method: "POST",
         headers: getHeaders(token),
         body: JSON.stringify(authorData),
@@ -690,7 +695,7 @@ authorsList.addEventListener("click", async (e) => {
     if (!confirm("Delete this author?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_AUTHORS}/${id}`, { 
+    await fetch(`${API_URL_LOCAL_AUTHORS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -700,7 +705,7 @@ authorsList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_AUTHORS}/${id}`, {
+    const res = await fetch(`${API_URL_LOCAL_AUTHORS}/${id}`, {
       headers: getHeaders(token)
     });
     const author = await res.json();
@@ -739,6 +744,9 @@ renderAuthors();
 
 //borrowings section
 const API_URL_BORROWINGS = "https://projectcrud-viktoriia2.onrender.com/api/borrowings";
+const API_URL_LOCAL_BORROWINGS = "http://localhost:3000/api/borrowings";
+
+
 
 const borrowingsList = document.getElementById("borrowings_list");
 const borrowingModal = document.getElementById("borrowing_modal");
@@ -755,7 +763,7 @@ async function populateSelects() {
   const token = getToken();
   if (!token) return;
   
-  const readersRes = await fetch(API_URL_READERS, {
+  const readersRes = await fetch(API_URL_LOCAL_READERS, {
     headers: getHeaders(token)
   });
   const readers = await readersRes.json();
@@ -767,7 +775,7 @@ async function populateSelects() {
     borrowingReaderSelect.appendChild(option);
   });
 
-  const booksRes = await fetch(API_URL_BOOKS, {
+  const booksRes = await fetch(API_URL_LOCAL_BOOKS, {
     headers: getHeaders(token)
   });
   const books = await booksRes.json();
@@ -789,7 +797,7 @@ async function renderBorrowings() {
     const token = getToken();
     if (!token) return;
     
-    const res = await fetch(API_URL_BORROWINGS, {
+    const res = await fetch(API_URL_LOCAL_BORROWINGS, {
       headers: getHeaders(token)
     });
     if (!res.ok) {
@@ -906,7 +914,7 @@ borrowingForm.addEventListener("submit", async (e) => {
     if (!token) return;
     
     if (editingBorrowingId) {
-      const res = await fetch(`${API_URL_BORROWINGS}/${editingBorrowingId}`, {
+      const res = await fetch(`${API_URL_LOCAL_BORROWINGS}/${editingBorrowingId}`, {
         method: "PUT",
         headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
@@ -917,7 +925,7 @@ borrowingForm.addEventListener("submit", async (e) => {
         return;
       }
     } else {
-      const res = await fetch(API_URL_BORROWINGS, {
+      const res = await fetch(API_URL_LOCAL_BORROWINGS, {
         method: "POST",
         headers: getHeaders(token),
         body: JSON.stringify(borrowingData)
@@ -949,7 +957,7 @@ borrowingsList.addEventListener("click", async (e) => {
     if (!confirm("Delete this borrowing?")) return;
     const token = getToken();
     if (!token) return;
-    await fetch(`${API_URL_BORROWINGS}/${id}`, { 
+    await fetch(`${API_URL_LOCAL_BORROWINGS}/${id}`, { 
       method: "DELETE",
       headers: getHeaders(token)
     });
@@ -959,7 +967,7 @@ borrowingsList.addEventListener("click", async (e) => {
   if (btn.classList.contains("edit_btn")) {
     const token = getToken();
     if (!token) return;
-    const res = await fetch(`${API_URL_BORROWINGS}/${id}`, {
+    const res = await fetch(`${API_URL_LOCAL_BORROWINGS}/${id}`, {
       headers: getHeaders(token)
     });
     const borrowing = await res.json();
@@ -997,11 +1005,13 @@ borrowingsBtn.addEventListener("click", () => {
 renderBorrowings();
 
 const token = localStorage.getItem('token');
+const API_ME = 'https://projectcrud-viktoriia2.onrender.com/api/users/me';
+const API_LOCAL_ME="http://localhost:3000/api/users/me"
 
 if(!token){
   window.location.href = '/public_page/public_page.html';
 }else{
-  fetch('https://projectcrud-viktoriia2.onrender.com/api/users/me', {
+  fetch(`${API_LOCAL_ME}`, {
     headers:{
       'Authorization':`Bearer ${token}`
     }

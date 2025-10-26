@@ -1,3 +1,54 @@
-this is my links for netlify: https://app.netlify.com/projects/myfirstrealwebsite/overview; myfirstrealwebsite.netlify.app
-and this is my link for render: https://dashboard.render.com/web/srv-d3p18cemcj7s739mer1g/deploys/dep-d3p37h56ubrc73an5vo0 ;   https://projectcrud-viktoriia2.onrender.com
-and this is my link for data base: https://railway.com/project/65af13eb-59e5-4bd5-a6d1-32474704b881/service/b35db3e5-fab0-4e31-8577-96c91d5dff4d/database?environmentId=0c00da44-826d-4336-8aa1-bf7733df1b00&state=table&table=books
+Opis zmian
+
+Ta gałąź dodaje pełny system autoryzacji użytkowników (register / login) z JWT oraz integrację z frontendem (modale logowania i rejestracji).
+Zaimplementowano również podstawową obsługę ról użytkowników. 
+
+
+
+Jak uruchomić lokalnie: 
+Backend
+1: Install Dependencies
+```powershell
+cd backend
+npm install
+```
+2: Create Environment File
+Copy `.env.example` to `.env`:
+```powershell
+Copy-Item ".env.example" ".env"
+```
+3: Configure Database Connection
+Edit `.env` file with your local MySQL credentials:
+```env
+DATABASE_URL=mysql://root:DSlZkNXyomXbbXvvEsasPcZGaJkIepxO@ballast.proxy.rlwy.net:54442/railway
+PORT=3000
+JWT_SECRET=your_super_secret_key_here_change_in_production
+```
+4: Start Backend Server
+```powershell
+npm run dev
+```
+Backend will run on: **http://localhost:3000**
+
+---
+
+Frontend
+1: Update API URLs
+Utworzyłam linki dla lokalnego uruchomiemia i dla urochomienia online, trzeba po prostu ich zmeniać, wyjątkiem jest /home trzeba zamienić https://projectcrud-viktoriia2.onrender.com/home na http://localhost:3000/home
+2: Uruchom server
+- Using Node.js http-server**
+```powershell
+npm install -g http-server
+cd frontend
+http-server
+```
+ Frontend will run on: **http://localhost:8000**
+
+
+Żeby urochomić lokalnie postępuj tak: 
+1: Zmień API URLs
+Utworzyłam linki dla lokalnego uruchomiemia i dla urochomienia online, trzeba po prostu ich zmeniać, wyjątkiem jest /home trzeba zamienić http://localhost:3000/home na https://projectcrud-viktoriia2.onrender.com/home
+
+i wejsc na strone Netlify uruchomić [link](https://myfirstrealwebsite.netlify.app/) 
+
+

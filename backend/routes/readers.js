@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const { authenticateToken } = require('../middleware/auth');
 
-router.get('/', async (req, res, next)=>{
+router.get('/', authenticateToken, async (req, res, next)=>{
     try{
         const [rows] = await db.query('SELECT * FROM readers ORDER by id');
         res.json(rows);
@@ -10,7 +11,7 @@ router.get('/', async (req, res, next)=>{
     }catch (err) {next(err);}
 });
 
-router.get('/:id', async (req, res, next)=>{
+router.get('/:id', authenticateToken, async (req, res, next)=>{
     try{
         const id = parseInt(req.params.id, 10);
         const [rows] = await db.query('SELECT * FROM readers WHERE id = ?', [id]);
@@ -20,7 +21,7 @@ router.get('/:id', async (req, res, next)=>{
      }catch (err) {next(err);}
  });
 
-router.post('/', async (req, res, next)=>{
+router.post('/', authenticateToken, async (req, res, next)=>{
     try{
         const{name, email, phone, date_of_birth} = req.body;
         if( !name || !email || !phone || !date_of_birth){
@@ -36,7 +37,7 @@ router.post('/', async (req, res, next)=>{
     }catch (err) {next(err);}
 });
 
-router.put('/:id', async (req, res, next) =>{
+router.put('/:id', authenticateToken, async (req, res, next) =>{
     try{
         const id = parseInt(req.params.id, 10);
         const{name, email, phone, date_of_birth} = req.body;
@@ -54,20 +55,12 @@ router.put('/:id', async (req, res, next) =>{
     }catch (err){next(err);}
 });
 
-router.delete('/:id', async (req,res,next) =>{
+router.delete('/:id', authenticateToken, async (req,res,next) =>{
     try{
         const id = parseInt(req.params.id, 10);
         const [result] = await db.query('DELETE FROM readers WHERE id =?', [id]);
         if(result.affectedRows === 0) return res.status(404).json({error: "Reader not found"});
         res.status(204).send();
-
-
-
-
-
-
-
-
     }catch (err) { next(err);}
 });
 

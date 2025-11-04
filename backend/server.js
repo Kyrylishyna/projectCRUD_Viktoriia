@@ -4,6 +4,7 @@ require('dotenv').config();
 const path = require('path');
 
 
+
 const booksRouter = require('./routes/books');
 const readerRouter = require('./routes/readers');
 const authorsRouter = require('./routes/authors');
@@ -17,6 +18,7 @@ app.use(cors());
 //app.options('*', cors());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use(express.json());
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 // API routes
@@ -48,11 +50,18 @@ app.get('/main', (req, res) => {
   }
 });
 
+app.get('/reset-password', (req, res) => {
+  try{
+    const filePath = path.join(__dirname, '..', 'frontend', 'public_page', 'reset_password.html');
+    res.sendFile(filePath);
+  }catch(error){
+    console.error("Error serving reset password page:", error);
+    res.status(500).send("Server error:" + error.message);
+  }
+});
 
 app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).json({error: "Internal Server Error"});
 
 });
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

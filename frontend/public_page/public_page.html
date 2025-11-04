@@ -100,8 +100,21 @@
                     <button type="button" class="btn btn-white cancelBtn" id="cancelBtnSignup">Cancel</button>
                     <button type="submit" class="signup_login_buttons">Log In</button>
                 </div>
-                <p id="forgot_password">Forgot password? <span id="forgot_password">Reset it here</span></p>
+                <p id="forgot_password_text">Forgot password? <span id="forgot_password_link">Reset it here</span></p>
                 <p>Don't have an account? <span id="switchToSignUp" class="link-like">Sign up</span></p>
+            </form>
+            <form id="forgot_form" class="auth_form hidden">
+                <div class="form_text">
+                    <h2>Reset password</h2>
+                    <p>Enter your email, and we'll send you a password reset link.</p>
+                </div>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="your@email.com" required>
+                <div class="buttons_auth">
+                    <button type="button" class="btn btn-white cancelBtn" id="cancelBtnForgot">Cancel</button>
+                    <button type="submit" class="signup_login_buttons">Send Reset Link</button>
+                </div>
+                <p id="forgot_message" class="status_message"></p>
             </form>
         </div>
     </div>

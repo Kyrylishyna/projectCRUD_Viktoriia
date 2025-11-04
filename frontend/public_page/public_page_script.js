@@ -129,3 +129,51 @@ const API_LOGIN_URL = 'https://projectcrud-viktoriia2.onrender.com/api/users/log
         alert("Error: "+ err.message);
     }
 });
+
+document.addEventListener('DOMContentLoaded', () =>{
+
+    const forgotForm = document.getElementById("forgot_form");
+    const forgotLink = document.querySelector("#forgot_password_link");
+    const cancelForgotBtn = document.getElementById("cancelBtnForgot");
+    const forgotMessage = document.getElementById("forgot_message");
+
+    forgotLink.addEventListener("click", () =>{
+        loginForm.classList.add("hidden");
+        forgotForm.classList.remove("hidden");
+    });
+    cancelForgotBtn.addEventListener("click", () =>{
+        forgotForm.classList.add("hidden");
+        loginForm.classList.remove("hidden");
+        forgotMessage.textContent = "";
+    });
+
+    forgotForm.addEventListener("submit", async (e) =>{
+        e.preventDefault();
+        const email = forgotForm.querySelector("input[name='email']").value.trim();
+    
+        if (!email) return;
+
+        try{
+            const response = await fetch(`https://projectcrud-viktoriia2.onrender.com/api/users/forgot-password`, {
+                method:"POST",
+                headers:{'Content-Type':"application/json"},
+                body: JSON.stringify({email}),
+            });
+
+            const data = await response.json();
+            if(response.ok){
+                forgotMessage.style.color = "green";
+                forgotMessage.textContent = "Reset link sent! Check your email."
+
+                
+            }else{
+                forgotMessage.style.color = "red";
+                forgotMessage.textContent = data.message || "Something went wrong.";
+            }
+        }catch (err){
+        console.error(err);
+            forgotMessage.style.color = "red";
+      forgotMessage.textContent = "Server error.";
+        }
+    })
+})

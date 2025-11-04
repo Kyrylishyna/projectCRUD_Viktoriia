@@ -93,7 +93,10 @@ router.get('/me', authenticateToken, async (req, res, next) => {
 //reset-forgot password
 
 const transporter = nodemailer.createTransport({
-  service: "SendGrid",
+    host: 'smtp.sendgrid.net',
+    port: 587,
+    secure: false,
+
   auth: {
     user: 'apikey',
     pass: process.env.SENDGRID_URL,

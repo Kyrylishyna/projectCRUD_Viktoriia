@@ -14,7 +14,9 @@ const usersRouter = require('./routes/users');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://myfirstrealwebsite.netlify.app'
+}));
 //app.options('*', cors());
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use(express.json());

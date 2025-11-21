@@ -1,16 +1,15 @@
-CREATE DATABASE IF NOT EXISTS book_tracker;
-USE book_tracker;
-
+-- Readers table
 CREATE TABLE IF NOT EXISTS readers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(255) NOT NULL,
     date_of_birth DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS books(
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- Books table
+CREATE TABLE IF NOT EXISTS books (
+    id SERIAL PRIMARY KEY,
     reader_id INT NULL,
     title VARCHAR(255) NOT NULL,
     author VARCHAR(255) NOT NULL,
@@ -20,34 +19,38 @@ CREATE TABLE IF NOT EXISTS books(
     FOREIGN KEY (reader_id) REFERENCES readers(id) ON DELETE SET NULL
 );
 
-CREATE TABLE authors (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  country VARCHAR(50),
-  birth_year INT,
-  bio TEXT
+-- Authors table
+CREATE TABLE IF NOT EXISTS authors (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    country VARCHAR(50),
+    birth_year INT,
+    bio TEXT
 );
 
-CREATE TABLE borrowings (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  reader_id INT,
-  book_id INT,
-  borrow_date DATE,
-  return_date DATE,
-  FOREIGN KEY (reader_id) REFERENCES readers(id),
-  FOREIGN KEY (book_id) REFERENCES books(id)
+-- Borrowings table
+CREATE TABLE IF NOT EXISTS borrowings (
+    id SERIAL PRIMARY KEY,
+    reader_id INT,
+    book_id INT,
+    borrow_date DATE,
+    return_date DATE,
+    FOREIGN KEY (reader_id) REFERENCES readers(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
 );
 
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE users 
+-- Add reset token columns
+ALTER TABLE users
 ADD COLUMN reset_token VARCHAR(255),
-ADD COLUMN reset_token_expiry DATETIME;
+ADD COLUMN reset_token_expiry TIMESTAMP;

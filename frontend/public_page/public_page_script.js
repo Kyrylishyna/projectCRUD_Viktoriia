@@ -59,7 +59,7 @@ signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const full_name = signupForm.querySelector('input[name="full_name"]').value;
-    const email = signupForm.querySelector('input[name="login"]').value;
+    const email = signupForm.querySelector('input[name="email"]').value;
     const password = signupForm.querySelector('input[name="password"]').value;
     const passwordRepeat = signupForm.querySelector('input[name="passwordRepeat"]').value;
 
@@ -102,7 +102,7 @@ signupForm.addEventListener('submit', async (e) => {
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const email = loginForm.querySelector('input[name="login"]').value;
+    const email = loginForm.querySelector('input[name="email"]').value;
     const password = loginForm.querySelector('input[name="password"]').value;
 
 
